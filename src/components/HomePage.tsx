@@ -2,13 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Box, Button, Center, Spinner } from '@chakra-ui/react'
 import {Link} from 'react-router-dom'
 import PresetCard from './PresetCard'
-
-
-export type Preset = {
-    id: number,
-    name: string,
-    actions: any
-}
+import {Preset} from '../types'
 
 import AddNewPresetButton from './AddNewPresetButton'
 export default function Home() {
