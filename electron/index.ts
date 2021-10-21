@@ -1,5 +1,6 @@
 // Native
 import { join } from 'path';
+import fs from 'fs';
 
 // Packages
 import { BrowserWindow, app, ipcMain, IpcMainEvent } from 'electron';
@@ -60,6 +61,15 @@ app.on('window-all-closed', () => {
 
 // listen the channel `message` and resend the received message to the renderer process
 ipcMain.on('message', (event: IpcMainEvent, message: any) => {
-  console.log(message);
+  console.log(111, message, event);
   setTimeout(() => event.sender.send('message', 'hi from electron'), 500);
+});
+
+ipcMain.on('GET_PRESETS', (event: IpcMainEvent) => {
+  
+  let presets = JSON.parse(fs.readFileSync(join(__dirname, 'data', 'presets.json'), { encoding: 'utf-8' }))
+  console.log(presets)
+
+    event.sender.send('GET_PRESETS_REPLY', presets)
+  
 });
