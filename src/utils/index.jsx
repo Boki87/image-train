@@ -3,10 +3,12 @@ function actionTypeName(name) {
     resize: 'Resize',
     toFile: 'Save file',
     extract: 'Crop',
-    toFormat: 'Change Image format'
-  };
+    extend: 'Expand Canvas',
+    toFormat: 'Change Image format',
+    flatten: 'BG color'
+  }
 
-  return types[name];
+  return types[name]
 }
 
-export { actionTypeName };
+export { actionTypeName }

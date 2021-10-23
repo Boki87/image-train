@@ -1,10 +1,11 @@
 // Native
 import { join } from 'path';
 import fs from 'fs';
-import {doActions} from './imageUtils.js'
+import { doActions } from './imageUtils.js'
+import os from 'os'
 
 // Packages
-import { BrowserWindow, app, ipcMain, IpcMainEvent } from 'electron';
+import { BrowserWindow, app, ipcMain, IpcMainEvent, session } from 'electron';
 import isDev from 'electron-is-dev';
 
 const height = 600;
@@ -40,8 +41,11 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+const reactDevToolsPath = join(os.homedir(), '/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.20.1_0')
+app.whenReady().then( async () => {
   createWindow();
+
+  await session.defaultSession.loadExtension(reactDevToolsPath)
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
@@ -75,4 +79,9 @@ ipcMain.on('GET_PRESETS', (event: IpcMainEvent) => {
 ipcMain.on('RUN_ACTIONS', async (event: IpcMainEvent, message: any) => {
   await doActions(message.actions, message.images)
   event.sender.send('RUN_ACTIONS_REPLY', 1)
+})
+
+ipcMain.on('SAVE_PRESETS', async (event: IpcMainEvent, message: any) => {
+  await fs.writeFileSync(join(__dirname, 'data', 'presets.json'), JSON.stringify(message))
+  event.sender.send('SAVE_PRESETS_REPLY', 1)
 })

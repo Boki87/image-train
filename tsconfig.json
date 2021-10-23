@@ -17,5 +17,5 @@
     "jsx": "preserve"
   },
   "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "src/store/index.jsx", "src/main.jsx", "src/App.jsx", "src/utils/index.jsx", "src/components/PresetCard.jsx", "src/components/NewPresetPage.jsx", "src/components/HomePage.jsx", "src/components/AddNewPresetButton.jsx"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "src/store/index.jsx", "src/main.jsx", "src/App.jsx", "src/utils/index.jsx", "src/components/PresetCard.jsx", "src/components/NewPresetPage.jsx", "src/components/HomePage.jsx", "src/components/AddNewPresetButton.jsx", "src/store/PresetsProvider.jsx"]
 }

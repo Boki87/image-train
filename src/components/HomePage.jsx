@@ -1,26 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, Center, Spinner } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
-import PresetCard from './PresetCard';
+import React, { useEffect, useState } from 'react'
+import { Box, SimpleGrid, Center, Spinner, AlertDialog } from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
+import { usePresetsContext } from '../store'
+import PresetCard from './PresetCard'
+import AddNewPresetButton from './AddNewPresetButton'
+import DeletePresetDialog from './DeletePresetDialog'
 
-import AddNewPresetButton from './AddNewPresetButton';
 export default function Home() {
-  const [isLoadingPresets, setIsLoadingPresets] = useState(false);
-  const [presets, setPresets] = useState([]);
-
-  useEffect(() => {
-    setIsLoadingPresets(true);
-    window.ipcRenderer.send('GET_PRESETS');
-  }, []);
-
-  useEffect(() => {
-    if (isLoadingPresets) {
-      window.Main.on('GET_PRESETS_REPLY', (message) => {
-        setPresets(message);
-        setIsLoadingPresets(false);
-      });
-    }
-  }, [isLoadingPresets]);
+  const { isLoadingPresets, presets } = usePresetsContext()
 
   return (
     <Box w="full" h="full">
@@ -31,16 +18,17 @@ export default function Home() {
       )}
 
       {!isLoadingPresets && (
-        <Box>
+        <SimpleGrid columns={{ sm: 2, md: 3, lg: 4, xl: 6 }} gap="4" pb="150px">
           {presets.map((p) => (
-            <PresetCard data={p} key={p.id} />
+            <Center key={`preset_card_` + p.id}>
+              <PresetCard data={p} key={p.id} />
+            </Center>
           ))}
-        </Box>
+        </SimpleGrid>
       )}
 
-      <Link to="/new-preset">
-        <AddNewPresetButton />
-      </Link>
+      <AddNewPresetButton />
+      <DeletePresetDialog />
     </Box>
-  );
+  )
 }

@@ -1,5 +1,8 @@
-import React from 'react';
+import React from 'react'
+import PresetsProvider, { usePresetsContext } from './PresetsProvider'
+
+export { usePresetsContext }
 
 export default function Store({ children }) {
-  return <div>{children}</div>;
+  return <PresetsProvider>{children}</PresetsProvider>
 }

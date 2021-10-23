@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Heading,
@@ -15,47 +15,60 @@ import {
   OrderedList,
   ListItem,
   Spinner
-} from '@chakra-ui/react';
-import { useDropzone } from 'react-dropzone';
-import { EditIcon, InfoIcon, DeleteIcon } from '@chakra-ui/icons';
-import { actionTypeName } from '../utils';
+} from '@chakra-ui/react'
+import { useDropzone } from 'react-dropzone'
+import { EditIcon, InfoIcon, DeleteIcon } from '@chakra-ui/icons'
+import { actionTypeName } from '../utils'
+import { usePresetsContext } from '../store'
 
 function imageValidator(file) {
   if (!file.type.includes('image')) {
     return {
       code: 'not-image',
       message: 'File must be a valid image'
-    };
+    }
   }
-  return null;
+  return null
 }
 
 export default function PresetCard({ data }) {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ validator: imageValidator });
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ validator: imageValidator })
 
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false)
+
+  const { openDeletePreset } = usePresetsContext()
 
   useEffect(() => {
     if (acceptedFiles && acceptedFiles.length > 0) {
-      console.log('process images');
-      window.ipcRenderer.send('RUN_ACTIONS', { actions: data.actions, images: acceptedFiles.map((img) => img.path) });
-      setIsProcessing(true);
+      console.log('process images')
+      window.ipcRenderer.send('RUN_ACTIONS', { actions: data.actions, images: acceptedFiles.map((img) => img.path) })
+      setIsProcessing(true)
     } else {
-      console.log('abort process images');
-      setIsProcessing(false);
+      console.log('abort process images')
+      setIsProcessing(false)
     }
-  }, [acceptedFiles]);
+  }, [acceptedFiles])
 
   useEffect(() => {
     if (isProcessing) {
       window.Main.on('RUN_ACTIONS_REPLY', (message) => {
-        setIsProcessing(false);
-      });
+        setIsProcessing(false)
+      })
     }
-  }, [isProcessing]);
+  }, [isProcessing])
 
   return (
-    <Flex w="200px" h="250px" bg="gray.700" borderRadius="md" p="2" direction="column" color="gray.100">
+    <Flex
+      w="full"
+      maxW="300px"
+      h="300px"
+      bg="gray.700"
+      borderRadius="md"
+      py="3"
+      px="4"
+      direction="column"
+      color="gray.100"
+    >
       <Heading as="h3" size="md" my="2" textAlign="center">
         {data.name}
       </Heading>
@@ -73,7 +86,7 @@ export default function PresetCard({ data }) {
         </Center>
       </div>
       <Flex direction="row" justifyContent="end" mt="3" color="gray.800">
-        <Button size="sm" colorScheme="green" ml="2">
+        <Button onClick={() => openDeletePreset(data.id)} size="sm" colorScheme="green" ml="2">
           <DeleteIcon />
         </Button>
         <Popover>
@@ -102,5 +115,5 @@ export default function PresetCard({ data }) {
         </Button>
       </Flex>
     </Flex>
-  );
+  )
 }
